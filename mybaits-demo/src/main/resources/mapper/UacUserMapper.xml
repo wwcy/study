@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybaits.mappers.userDao">
+    <resultMap id="BaseResultMap" type="uacUser">
+        <id column="id" property="id"/>
+        <result column="login_name"  property="loginName"/>
+        <result column="login_pwd"  property="loginPwd"/>
+        <result column="username"  property="username"/>
+        <result column="mobile_no"  property="mobileNo"/>
+        <result column="email"  property="email"/>
+        <result column="status"  property="status"/>
+        <result column="is_sys"  property="isSys"/>
+        <result column="last_login_ip" property="lastLoginIp"/>
+        <result column="create_date"  property="createDate"/>
+        <result column="create_by"  property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+
+    <sql id ="Base_OrderBy_Condition">
+        <if test="orderBy != null and orderBy !=''">
+            ORDER BY ${orderBy}
+        </if>
+    </sql>
+
+    <sql id="Base_Column_List">
+        u.id,
+        u.login_name,
+        u.login_pwd,
+        u.username,
+        u.mobile_no,
+        u.email,
+        u.status,
+        u.is_sys,
+        u.last_login_ip,
+        u.create_by,
+        u.create_date,
+        u.update_by,
+        u.update_date
+    </sql>
+
+    <sql id="Base_Set_Condition" >
+        <set >
+            <if test="loginName != null" >
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPwd != null" >
+                login_pwd = #{loginPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="mobileNo != null" >
+                mobile_no = #{mobileNo,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=BIGINT},
+            </if>
+            <if test="isSys != null">
+                is_sys = #{isSys,jdbcType=BIGINT},
+            </if>
+            <if test="lastLoginIp != null" >
+                last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null" >
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createdDate != null" >
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null" >
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updatedDate != null" >
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+    </sql>
+    <sql id="Base_Where_Condition" >
+        <if test="id != null and id != ''" >
+            AND ${alias}.id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="loginName != null and loginName != ''" >
+            AND ${alias}.login_name = #{loginName,jdbcType=VARCHAR}
+        </if>
+        <if test="loginPwd != null and loginPwd != ''" >
+            AND ${alias}.login_pwd = #{loginPwd,jdbcType=VARCHAR}
+        </if>
+        <if test="username != null and username != ''" >
+            AND ${alias}.username = #{username,jdbcType=VARCHAR}
+        </if>
+        <if test="mobileNo != null and mobileNo != ''" >
+            AND ${alias}.mobile_no = #{mobileNo,jdbcType=VARCHAR}
+        </if>
+        <if test="email != null and email != ''" >
+            AND ${alias}.email = #{email,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null" >
+            AND ${alias}.status = #{status,jdbcType=BIGINT}
+        </if>
+        <if test="isSys != null" >
+            AND ${alias}.is_sys = #{isSys,jdbcType=BIGINT}
+        </if>
+        <if test="lastLoginIp != null and lastLoginIp != ''" >
+            AND ${alias}.last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and createBy !=''" >
+            AND ${alias}.create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null" >
+            AND ${alias}.create_date = #{createDate,jdbcType=SMALLINT}
+        </if>
+        <if test="updateBy != null and updateBy !=''" >
+            AND ${alias}.update_by = #{updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null" >
+            AND ${alias}.update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+    </sql>
+
+    <update id="updateUacUser" parameterType="uacUser">
+        update uam_uac_user
+        <include refid="Base_Set_Condition"/>
+        where  id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findByLoginName" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        from
+          uam_uac_user u
+        WHERE
+          u.login_name=#{loginName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByMobileNo" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        from
+          uam_uac_user u
+        WHERE
+          u.mobile_no=#{mobileNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByLoginNameAndLoginPwd" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        FROM
+          uam_uac_user u
+        WHERE
+          u.login_name = #{loginName,jdbcType=VARCHAR} AND u.login_pwd = #{loginPwd,jdbcType=VARCHAR}
+    </select>
+    <select id="selectUserList" parameterType="uacUser" resultType="uacUser">
+        SELECT
+        <include refid="Base_Column_List"/>, g.id as groupId, g.group_name as groupName
+        FROM
+          pc_uac_user u
+        LEFT JOIN pc_uac_group_user gu ON gu.user_id = u.id
+        LEFT JOIN pc_uac_group g ON g.id = gu.group_id
+        WHERE 1 = 1
+        <include refid="Base_Where_Condition">
+            <property name="alias" value="u"></property>
+        </include>
+        <include refid="Base_OrderBy_Condition">
+            <property name="alias" value="u"></property>
+        </include>
+    </select>
+    <select id="selectUserInfoByUserId" resultType="uacUser">
+        SELECT
+        <include refid="Base_Column_List"/>,
+        g.id as groupId,
+        g.group_name as groupName
+        FROM
+            pc_uac_user u
+            LEFT JOIN pc_uac_group_user gu on u.id = gu.user_id
+            LEFT JOIN pc_uac_group g on gu.group_id = g.id
+        WHERE u.id = #{userId}
+    </select>
+
+
+</mapper>
