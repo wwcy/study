@@ -20,7 +20,8 @@
 		<module>mybaits-demo</module>
 		<module>spring_cloud</module>
 		<module>spi</module>
-	</modules>
+        <module>juc</module>
+    </modules>
 
 	<properties>
 		<java.version>1.8</java.version>
