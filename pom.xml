@@ -22,6 +22,7 @@
 		<module>spi</module>
         <module>juc</module>
 		<module>hystrix</module>
+        <module>jvm</module>
     </modules>
 
 	<properties>
