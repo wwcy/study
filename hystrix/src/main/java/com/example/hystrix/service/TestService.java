@@ -28,7 +28,7 @@ public class TestService {
 
     private static BlockingQueue<Work> queue = new LinkedBlockingQueue<>();
 
-   /* static {
+    static {
         System.out.println("静态块----");
         executorService.scheduleAtFixedRate(()->{
 
@@ -59,7 +59,7 @@ public class TestService {
             }
 
         }, 0, 500, TimeUnit.MILLISECONDS);
-    }*/
+    }
 
     /**
      *用于高并发查询 请求合并

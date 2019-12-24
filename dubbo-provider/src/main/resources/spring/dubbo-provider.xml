@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- dubbo配置. Dubbo的配置信息,必须导入新的namespace. namespace可以通过dubbo的jar包查询.
+		配置文件的约束信息所在位置: dubbo.jar/META-INF/dubbo.xsd
+	 -->
+	<!-- 1. 配置dubbo的应用名称, 是为一个Dubbo的Provider或Consumer在注册中心中定义唯一命名.
+		且在monitor监控中心中可以根据应用名称查看应用统计信息.
+	 -->
+	<dubbo:application name="dubbo-provider"/>
+	
+	<!-- 2. 配置注册中心. 是定义注册中心Zookeeper所在的位置和使用的协议.
+		协议名称就是zookeeper, 地址是IP:port。若为ZooKeeper集群，则多个地址之间使用逗号分隔
+	 -->
+	<dubbo:registry address="192.168.245.129:2181,192.168.245.129:2182,192.168.245.129:2183"
+		protocol="zookeeper" register="true"/>
+		
+<!--
+	<dubbo:monitor protocol="registry" />
+-->
+
+	<!-- 3. 配置协议信息. 是配置,在发布的服务中,绑定的协议是什么. 也就是Consumer使用什么协议访问Provider -->
+	<dubbo:protocol name="dubbo"/>
+	<!-- 4. 配置具体的要发布的服务信息.
+		发布的服务是协议内容. 就是 - 协议://ip:port/接口名称?方法&参数&其他配置等
+		发布的服务, 在订阅后,必须配合具体的服务的接口,才能使用. 不需要实现类.
+		发布的服务虽然是协议内容, 但是必须由具体的要发布的服务接口的实现类提供服务的实现. 
+		所以需要引用一个有效的service对象.
+		ref - 具体的提供服务的实现类对象. 是spring容器管理的对象.
+			使用bean对象命名查询的.
+		interface - 接口. 代表发布的服务绑定的接口类型是什么.
+	 -->
+	<bean id="userServiceImpl" class="com.example.impl.UserServiceImpl"></bean>
+
+	<dubbo:service ref="userServiceImpl" interface="com.example.service.UserService"/>
+
+	<!--<dubbo:service ref="adminServiceImpl" interface="com.example.service.AdminService"/>-->
+	<!-- <dubbo:reference interface="" id="" /> -->
+	
+	<!-- 扫描spring的注解, 创建service对象. -->
+<!--
+	<context:component-scan base-package="com.example.service"></context:component-scan>
+-->
+
+</beans>
