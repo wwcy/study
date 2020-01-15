@@ -1,3 +1,4 @@
+/*
 package com.wcy;
 
 import org.apache.http.HttpEntity;
@@ -23,3 +24,4 @@ class CurrencyApplicationTests {
 	}
 
 }
+*/
